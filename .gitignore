@@ -1,3 +1,16 @@
-# Ignore all node_modules directories in two directories
+# ===============================
+# Backend
+# ===============================
 backend/node_modules/
+
+backend/.env.development
+backend/.env
+
+
+# ===============================
+# Frontend
+# ===============================
 frontend/node_modules/
+
+backend/.env.development
+backend/.env
