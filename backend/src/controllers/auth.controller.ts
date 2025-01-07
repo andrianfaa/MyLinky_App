@@ -47,7 +47,8 @@ export const getCurrentUser = async (req: Request, res: Response) => {
       data: {
         email: user.email,
         username: user.username,
-        name: user.name
+        name: user.name,
+        avatar: user.avatar
       }
     });
   } catch (error: any) {

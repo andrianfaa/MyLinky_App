@@ -1,6 +1,6 @@
 import { createHmac } from "crypto";
 import ApiError from "../class/ApiError";
-import userModel from "../database/models/user.model";
+import { LinkyModel, UserModel } from "../database/models";
 import type { TUserSchema } from "../database/schemas/types";
 import { signJwt } from "../utils";
 
@@ -11,8 +11,14 @@ export interface SignInBody {
 
 export interface SignUpBody extends Omit<TUserSchema, "id" | "uid" | "role" | "createdAt" | "updatedAt"> {}
 
+/**
+ * Sign in user
+ *
+ * @param {String} email
+ * @param {String} password
+ */
 export const signIn = async (email: string, password: string) => {
-  const user = await userModel.getByEmail(email, false);
+  const user = await UserModel.getByEmail(email, false);
 
   if (!user) throw ApiError.notFound("User not found");
   if (!process.env.SECRET_KEY) throw new Error("SECRET_KEY is not defined");
@@ -38,16 +44,29 @@ export const signIn = async (email: string, password: string) => {
   };
 };
 
+/**
+ * Sign up user
+ *
+ * @param {SignUpBody} data
+ */
 export const signUp = async (data: SignUpBody) => {
-  const isExist = await userModel.isExist({ email: data.email, username: data.username });
+  const isExist = await UserModel.isExist({ email: data.email, username: data.username });
 
   if (isExist) throw ApiError.conflict("User already exist");
 
-  const user = await userModel.create({
+  const user = await UserModel.create({
     ...data
   });
 
   if (!user) throw ApiError.internalServerError("Failed to create user");
+
+  console.log(user);
+
+  // Create linky for user
+  await LinkyModel.create(user._id || user.id, {
+    siteName: `${user.username}'s Linky`,
+    siteDescription: `Welcome to ${user.username}'s Linky!`
+  });
 
   return {
     uid: user.uid,
@@ -55,8 +74,14 @@ export const signUp = async (data: SignUpBody) => {
   };
 };
 
+/**
+ * Get current user
+ *
+ * @param {String} uid
+ * @returns
+ */
 export const getCurrentUser = async (uid: string) => {
-  const user = await userModel.getByUID(uid);
+  const user = await UserModel.getByUID(uid);
 
   if (!user) throw ApiError.notFound("User not found");
 
