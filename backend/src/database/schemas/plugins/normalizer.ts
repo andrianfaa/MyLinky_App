@@ -5,7 +5,11 @@ export default () =>
     schema.set("toJSON", {
       virtuals: true,
       transform: (_, data) => {
-        const id = data._id;
+        if (data._id) {
+          data.id = data._id;
+        } else {
+          delete data.id;
+        }
 
         delete data._id;
         delete data.__v;
@@ -14,10 +18,7 @@ export default () =>
           delete data.password;
         }
 
-        return {
-          id,
-          ...data
-        };
+        return data;
       }
     });
   };

@@ -1,4 +1,5 @@
 /** @type {import("express").Express} */
+/** @type {import("mongoose").Types} */
 
 declare global {
   interface ApiResponseModel<T = null> {
@@ -12,6 +13,7 @@ declare global {
   namespace Express {
     interface Request {
       user: {
+        id: Types.ObjectId;
         uid: string;
         email: string;
       };

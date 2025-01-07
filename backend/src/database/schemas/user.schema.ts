@@ -1,7 +1,6 @@
 import { TZDate } from "@date-fns/tz";
 import { createHmac, randomUUID } from "crypto";
 import { Schema } from "mongoose";
-import normalizer from "./plugins/normalizer";
 import type { TUserSchema } from "./types";
 
 const UserSchema = new Schema<TUserSchema>({

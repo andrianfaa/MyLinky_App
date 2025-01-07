@@ -1,3 +1,6 @@
+# This docker-compose file is used to run the MongoDB database locally for development purposes.
+# The database is exposed on port 27017 and the root username and password are set to admin.
+
 services:
   mongodb:
     image: mongo
@@ -7,3 +10,5 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin # Change this password to a secure one
+    volumes:
+      - ./../database/MyLinkyApp_DB:/data/db
